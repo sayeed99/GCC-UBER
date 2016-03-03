@@ -16472,13 +16472,7 @@ lower_omp_target (gimple_stmt_iterator *gsi_p, omp_context *ctx)
 		    x = build_fold_addr_expr_loc (clause_loc, x);
 		  }
 		else
-		  {
-		    tree atmp
-		      = builtin_decl_explicit (BUILT_IN_ALLOCA_WITH_ALIGN);
-		    tree rtype = TREE_TYPE (TREE_TYPE (new_var));
-		    tree al = size_int (TYPE_ALIGN (rtype));
-		    x = build_call_expr_loc (clause_loc, atmp, 2, x, al);
-		  }
+		  break;
 
 		x = fold_convert_loc (clause_loc, TREE_TYPE (new_var), x);
 		gimplify_expr (&x, &new_body, NULL, is_gimple_val, fb_rvalue);
@@ -16545,7 +16539,8 @@ lower_omp_target (gimple_stmt_iterator *gsi_p, omp_context *ctx)
 	  }
       /* Handle GOMP_MAP_FIRSTPRIVATE_{POINTER,REFERENCE} in second pass,
 	 so that firstprivate vars holding OMP_CLAUSE_SIZE if needed
-	 are already handled.  */
+	 are already handled.  Similarly OMP_CLAUSE_PRIVATE for VLAs
+	 or references to VLAs.  */
       for (c = clauses; c; c = OMP_CLAUSE_CHAIN (c))
 	switch (OMP_CLAUSE_CODE (c))
 	  {
@@ -16686,6 +16681,27 @@ lower_omp_target (gimple_stmt_iterator *gsi_p, omp_context *ctx)
 		gimplify_expr (&x, &new_body, NULL, is_gimple_val, fb_rvalue);
 		gimple_seq_add_stmt (&new_body,
 				     gimple_build_assign (new_pvar, x));
+	      }
+	    else if (is_reference (var) && !is_gimple_omp_oacc (ctx->stmt))
+	      {
+		location_t clause_loc = OMP_CLAUSE_LOCATION (c);
+		tree new_var = lookup_decl (var, ctx);
+		tree x = TYPE_SIZE_UNIT (TREE_TYPE (TREE_TYPE (new_var)));
+		if (TREE_CONSTANT (x))
+		  break;
+		else
+		  {
+		    tree atmp
+		      = builtin_decl_explicit (BUILT_IN_ALLOCA_WITH_ALIGN);
+		    tree rtype = TREE_TYPE (TREE_TYPE (new_var));
+		    tree al = size_int (TYPE_ALIGN (rtype));
+		    x = build_call_expr_loc (clause_loc, atmp, 2, x, al);
+		  }
+
+		x = fold_convert_loc (clause_loc, TREE_TYPE (new_var), x);
+		gimplify_expr (&x, &new_body, NULL, is_gimple_val, fb_rvalue);
+		gimple_seq_add_stmt (&new_body,
+				     gimple_build_assign (new_var, x));
 	      }
 	    break;
 	  }
@@ -17241,7 +17257,7 @@ grid_find_single_omp_among_assignments (gimple_seq seq, location_t target_loc,
 static tree
 grid_find_ungridifiable_statement (gimple_stmt_iterator *gsi,
 				   bool *handled_ops_p,
-				   struct walk_stmt_info *)
+				   struct walk_stmt_info *wi)
 {
   *handled_ops_p = false;
   gimple *stmt = gsi_stmt (*gsi);
@@ -17251,6 +17267,7 @@ grid_find_ungridifiable_statement (gimple_stmt_iterator *gsi,
       if (gimple_call_noreturn_p (as_a <gcall *> (stmt)))
 	{
 	  *handled_ops_p = true;
+	  wi->info = stmt;
 	  return error_mark_node;
 	}
       break;
@@ -17266,7 +17283,18 @@ grid_find_ungridifiable_statement (gimple_stmt_iterator *gsi,
     case GIMPLE_OMP_TARGET:
     case GIMPLE_OMP_ORDERED:
       *handled_ops_p = true;
+      wi->info = stmt;
       return error_mark_node;
+
+    case GIMPLE_OMP_FOR:
+      if ((gimple_omp_for_kind (stmt) & GF_OMP_FOR_SIMD)
+	  && gimple_omp_for_combined_into_p (stmt))
+	{
+	  *handled_ops_p = true;
+	  wi->info = stmt;
+	  return error_mark_node;
+	}
+      break;
 
     default:
       break;
@@ -17509,10 +17537,11 @@ grid_target_follows_gridifiable_pattern (gomp_target *target, tree *group_size_p
 
   struct walk_stmt_info wi;
   memset (&wi, 0, sizeof (wi));
-  if (gimple *bad = walk_gimple_seq (gimple_omp_body (gfor),
-				     grid_find_ungridifiable_statement,
-				     NULL, &wi))
+  if (walk_gimple_seq (gimple_omp_body (gfor),
+		       grid_find_ungridifiable_statement,
+		       NULL, &wi))
     {
+      gimple *bad = (gimple *) wi.info;
       if (dump_enabled_p ())
 	{
 	  if (is_gimple_call (bad))
@@ -17520,6 +17549,11 @@ grid_target_follows_gridifiable_pattern (gomp_target *target, tree *group_size_p
 			     "Will not turn target construct into a gridified "
 			     " GPGPU kernel because the inner loop contains "
 			     "call to a noreturn function\n");
+	  if (gimple_code (bad) == GIMPLE_OMP_FOR)
+	    dump_printf_loc (MSG_NOTE, tloc,
+			     "Will not turn target construct into a gridified "
+			     " GPGPU kernel because the inner loop contains "
+			     "a simd construct\n");
 	  else
 	    dump_printf_loc (MSG_NOTE, tloc,
 			     "Will not turn target construct into a gridified "

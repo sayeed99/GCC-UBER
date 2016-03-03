@@ -1,4 +1,45 @@
+2016-03-01  Jason Merrill  <jason@redhat.com>
+
+	PR c++/70036
+	* parser.c (cp_parser_requires_clause): Call
+	check_for_bare_parameter_packs.
+
+	PR c++/51489
+	* constexpr.c (cxx_eval_binary_expression): Don't VERIFY_CONSTANT
+	the operands.
+
+	PR c++/69995
+	* constexpr.c (cxx_eval_call_expression): Unshare arg.
+	(cxx_eval_constant_expression) [DECL_EXPR]: Unshare init.
+	[TARGET_EXPR]: Unshare init.
+
+2016-03-01  Patrick Palka  <ppalka@gcc.gnu.org>
+
+	PR c++/68948
+	PR c++/69961
+	* pt.c (tsubst_baselink): Reinstate the check for an invalid
+	constructor call.
+
+2016-02-28  Jason Merrill  <jason@redhat.com>
+
+	PR c++/69995
+	* constexpr.c (cxx_eval_store_expression): Unshare init.
+
+2016-02-26  Jason Merrill  <jason@redhat.com>
+
+	PR c++/69958
+	* pt.c (make_argument_pack): New.
+	(tsubst_copy) [SIZEOF_EXPR]: Handle partial expansion.
+	(tsubst_copy_and_build): Likewise.
+
 2016-02-25  Jason Merrill  <jason@redhat.com>
+
+	PR c++/69889
+	* cp-tree.h (AGGR_INIT_FROM_THUNK_P): New.
+	* tree.c (build_aggr_init_expr): Set it.
+	* semantics.c (simplify_aggr_init_expr): Check it.
+	* cp-gimplify.c (cp_genericize_r): Don't walk into
+	a call/aggr_init from a thunk.
 
 	PR c++/69842
 	* method.c (forward_parm): Handle parameter packs.

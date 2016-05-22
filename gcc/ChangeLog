@@ -1,3 +1,127 @@
+2016-05-20  Eric Botcazou  <ebotcazou@adacore.com>
+
+	* config/arm/arm.c (arm_expand_prologue): Set the stack usage to 0
+	for naked functions.
+	(thumb1_expand_prologue): Likewise.
+
+2016-05-20  Jakub Jelinek  <jakub@redhat.com>
+
+	PR c++/71210
+	* gimple-fold.c (gimple_fold_call): Do not remove lhs of noreturn
+	calls if the LHS is variable length or has addressable type.
+	If targets[0]->decl is a noreturn call with void return type and
+	zero arguments, adjust fntype and remove lhs in that case.
+
+2016-05-20  Uros Bizjak  <ubizjak@gmail.com>
+
+	* sched-deps.c (sched_analyze_2) <case TRAP_IF>: Also
+	force pending loads from memory.
+
+2016-05-19  Marek Polacek  <polacek@redhat.com>
+
+	Backport from mainline
+	2016-05-19  Marek Polacek  <polacek@redhat.com>
+
+	PR tree-optimization/71031
+	* tree-vrp.c (extract_range_from_binary_expr_1): Turn assert into a
+	condition and adjust the code a bit.
+
+2016-05-19  Martin Jambor  <mjambor@suse.cz>
+
+	PR ipa/70646
+	* ipa-prop.c (determine_locally_known_aggregate_parts): Bail out early
+	if parameter PARAM_IPA_MAX_AGG_ITEMS is zero.
+
+2016-05-19  Martin Jambor  <mjambor@suse.cz>
+
+	PR ipa/70646
+	* ipa-inline.h (condition): New field size.
+	* ipa-inline-analysis.c (add_condition): New parameter SIZE, use it
+	for comaprison and store it into the new condition.
+	(evaluate_conditions_for_known_args): Use condition size to check
+	access sizes for all but CHANGED conditions.
+	(unmodified_parm_1): New parameter size_p, store access size into it.
+	(unmodified_parm): Likewise.
+	(unmodified_parm_or_parm_agg_item): Likewise.
+	(eliminated_by_inlining_prob): Pass NULL to unmodified_parm as size_p.
+	(set_cond_stmt_execution_predicate): Extract access sizes and store
+	them to conditions.
+	(set_switch_stmt_execution_predicate): Likewise.
+	(will_be_nonconstant_expr_predicate): Likewise.
+	(will_be_nonconstant_predicate): Likewise.
+	(inline_read_section): Stream condition size.
+	(inline_write_summary): Likewise.
+	* lto-streamer.h (LTO_minor_version): Bump.
+
+2016-05-18  Martin Liska  <mliska@suse.cz>
+
+	Backport from mainline
+	2016-05-18  Martin Liska  <mliska@suse.cz>
+
+	PR fortran/70856
+	* ipa-icf.c (sem_variable::merge): Set DECL_PT_UID for
+	merged variables.
+
+2016-05-18  Jakub Jelinek  <jakub@redhat.com>
+
+	PR c++/71100
+	* cgraph.c (cgraph_edge::redirect_call_stmt_to_callee): Don't drop
+	lhs if it has TREE_ADDRESSABLE type.
+
+2016-05-18  Uros Bizjak  <ubizjak@gmail.com>
+
+	PR target/71145
+	* config/alpha/alpha.md (trap): Add (use (reg:DI 29)).
+	(*exception_receiver_1): Return "#" for TARGET_EXPLICIT_RELOCS.
+
+2016-05-17  Thomas Schwinge  <thomas@codesourcery.com>
+
+	Backport trunk r235748:
+	PR target/70860
+	* config/nvptx/nvptx.c (nvptx_libcall_value): Handle NULL cfun.
+	(nvptx_function_value): Assert non-NULL cfun.
+
+2016-05-17  Kyrylo Tkachov  <kyrylo.tkachov@arm.com>
+
+	Backport from mainline
+	2016-05-17  Kyrylo Tkachov  <kyrylo.tkachov@arm.com>
+
+	PR target/70809
+	* config/aarch64/aarch64-simd.md (aarch64_vmls<mode>): Delete.
+
+2016-05-16  Martin Jambor  <mjambor@suse.cz>
+
+	* hsa-gen.c (fillup_for_decl): Increase alignment to natural one.
+	(get_symbol_for_decl): Sorry if a global symbol in under-aligned.
+
+2016-05-16  Martin Jambor  <mjambor@suse.cz>
+
+	PR hsa/70857
+	* omp-low.c (grid_expand_target_grid_body): Copy RESULT_DECL of
+	the outlined kernel function.
+
+2016-05-16  James Norris  <jnorris@codesourcery.com>
+
+	Backport from mainline r236098.
+	2016-05-10  James Norris  <jnorris@codesourcery.com>
+
+	PR driver/68463
+	* config/rs6000/sysv4.h (CRTOFFLOADBEGIN): Define. Add crtoffloadbegin.o
+	if offloading is enabled and -fopenacc or -fopenmp is specified.
+	(CRTOFFLOADEND): Likewise.
+	(STARTFILE_LINUX_SPEC): Add CRTOFFLOADBEGIN.
+	(ENDFILE_LINUX_SPEC): Add CRTOFFLOADEND.
+
+2016-05-16  Alan Modra  <amodra@gmail.com>
+
+	Apply from mainline
+	2016-05-10  Alan Modra  <amodra@gmail.com>
+	PR target/70947
+	* config/rs6000/rs6000.c (rs6000_expand_split_stack_prologue): Stop
+	regrename modifying insns saving lr before __morestack call.
+	* config/rs6000/rs6000.md (split_stack_return): Similarly for
+	insns restoring lr after __morestack call.
+
 2016-05-13  Richard Biener  <rguenther@suse.de>
 
 	Backport from mainline

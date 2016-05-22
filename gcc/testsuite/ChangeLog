@@ -1,3 +1,79 @@
+2016-05-20  Jakub Jelinek  <jakub@redhat.com>
+
+	PR c++/71210
+	* g++.dg/opt/pr71210-1.C: New test.
+	* g++.dg/opt/pr71210-2.C: New test.
+
+	PR fortran/71204
+	* gfortran.dg/pr71204.f90: New test.
+
+2016-05-19  David Malcolm  <dmalcolm@redhat.com>
+
+	Backport from trunk r236483.
+	PR c++/71184
+	* g++.dg/pr71184.C: New test case.
+
+2016-05-19  Marek Polacek  <polacek@redhat.com>
+
+	Backport from mainline
+	2016-05-19  Marek Polacek  <polacek@redhat.com>
+
+	PR tree-optimization/71031
+	* gcc.dg/tree-ssa/vrp100.c: New test.
+
+2016-05-19  Bernd Edlinger  <bernd.edlinger@hotmail.de>
+
+	Backport from mainline
+	2016-05-19  Bernd Edlinger  <bernd.edlinger@hotmail.de>
+
+	* c-c++-common/pr69669.c: Check the used mode.
+
+2016-05-19  Martin Jambor  <mjambor@suse.cz>
+
+	PR ipa/70646
+	* gcc.dg/ipa/pr70646.c: New test.
+
+2016-05-18  Jakub Jelinek  <jakub@redhat.com>
+
+	PR c++/71100
+	* g++.dg/opt/pr71100.C: New test.
+
+2016-05-18  Paolo Carlini  <paolo.carlini@oracle.com>
+
+	PR c++/70466
+	* g++.dg/template/pr70466-1.C: New.
+	* g++.dg/template/pr70466-2.C: Likewise.
+
+2016-05-18  Christophe Lyon  <christophe.lyon@linaro.org>
+
+	Backport from mainline r236377.
+	2016-05-19  Christophe Lyon  <christophe.lyon@linaro.org>
+
+	* gcc.target/aarch64/noplt_3.c: Scan for "br\t".
+	* gcc.target/aarch64/tail_indirect_call_1.c: Scan for "br\t",
+	"blr\t" and switch to scan-assembler-times.
+
+2016-05-17  Kyrylo Tkachov  <kyrylo.tkachov@arm.com>
+
+	Backport from mainline
+	2016-05-17  Kyrylo Tkachov  <kyrylo.tkachov@arm.com>
+
+	PR target/70809
+	* gcc.target/aarch64/pr70809_1.c: New test.
+
+2016-05-15  Bill Schmidt  <wschmidt@linux.vnet.ibm.com>
+
+	Backport from mainline
+	2016-05-11  Bill Schmidt  <wschmidt@linux.vnet.ibm.com>
+
+	* gcc.target/powerpc/pr70963.c: Require at least power8 at both
+	compile and run time.
+
+2016-05-15  Harald Anlauf  <anlauf@gmx.de>
+
+	PR fortran/69603
+	* gfortran.dg/pr69603.f90: New testcase.
+
 2016-05-14  Fritz Reese  <fritzoreese@gmail.com>
 
 	Backport from trunk: r235999, r236241, r236242

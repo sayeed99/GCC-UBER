@@ -1,3 +1,28 @@
+2016-05-25  Eric Botcazou  <ebotcazou@adacore.com>
+
+	* gnat.dg/opt55.ad[sb]: New test.
+
+2016-05-24  Martin Sebor  <msebor@redhat.com>
+
+	PR c++/71147
+	* g++.dg/ext/flexary16.C: New test.
+
+2016-05-24  Paolo Carlini  <paolo.carlini@oracle.com>
+
+	PR c++/69872
+	* g++.dg/warn/Wno-narrowing1.C: New.
+
+2016-05-24  Jakub Jelinek  <jakub@redhat.com>
+
+	PR c++/71257
+	* g++.dg/vect/simd-clone-6.cc: New test.
+	* g++.dg/gomp/declare-simd-6.C: New test.
+
+2016-05-23  Martin Jambor  <mjambor@suse.cz>
+
+	PR tree-optimization/70884
+	* gcc.dg/tree-ssa/pr70919.c: New test.
+
 2016-05-20  Jakub Jelinek  <jakub@redhat.com>
 
 	PR c++/71210

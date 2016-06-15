@@ -1,3 +1,47 @@
+2016-06-14  Jakub Jelinek  <jakub@redhat.com>
+
+	Backported from mainline
+	2016-06-10  Jakub Jelinek  <jakub@redhat.com>
+
+	PR middle-end/71494
+	* tree-nested.c (convert_nonlocal_reference_stmt): For GIMPLE_GOTO
+	without LABEL_DECL, set *handled_ops_p to false instead of true.
+
+	2016-06-08  Jakub Jelinek  <jakub@redhat.com>
+		    Richard Biener  <rguenther@suse.de>
+
+	PR c++/71448
+	* fold-const.c (fold_comparison): Handle CONSTANT_CLASS_P (base0)
+	the same as DECL_P (base0) for indirect_base0.  Use equality_code
+	in one further place.
+
+	2016-06-04  Jakub Jelinek  <jakub@redhat.com>
+
+	PR tree-optimization/71405
+	* tree-ssa.c (execute_update_addresses_taken): For clobber with
+	incompatible type, build a new clobber with the right type instead
+	of building a VIEW_CONVERT_EXPR around it.
+
+2016-06-13  Eric Botcazou  <ebotcazou@adacore.com>
+
+	* tree-ssa-sccvn.c (vn_reference_lookup_3): Use a uniform test and
+	update shared_lookup_references only once after changing operands.
+
+2016-06-13  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/71505
+	* tree-vect-data-refs.c (vect_analyze_data_ref_accesses): Make
+	assert match comment.
+
+2016-06-13  Andreas Krebbel  <krebbel@linux.vnet.ibm.com>
+
+	Backport from mainline
+	2016-06-13  Andreas Krebbel  <krebbel@linux.vnet.ibm.com>
+
+	PR target/71379
+	* config/s390/s390.c (s390_expand_builtin): Increase MAX_ARGS by
+	one.
+
 2016-06-10  Thomas Schwinge  <thomas@codesourcery.com>
 
 	PR middle-end/71373

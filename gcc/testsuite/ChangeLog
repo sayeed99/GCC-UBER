@@ -1,3 +1,16 @@
+2016-06-16  Bill Schmidt  <wschmidt@linux.vnet.ibm.com>
+
+	Backport from mainline
+	2016-06-14  Bill Schmidt  <wschmidt@linux.vnet.ibm.com>
+	* gcc.target/powerpc/vsx-elemrev-2.c: Change effective target
+	requirements, and disable for AIX for now.
+	* gcc.target/powerpc/vsx-elemrev-4.c: Likewise.
+
+2016-06-16  Jakub Jelinek  <jakub@redhat.com>
+
+	PR target/71554
+	* gcc.c-torture/execute/pr71554.c: New test.
+
 2016-06-14  Paolo Carlini  <paolo.carlini@oracle.com>
 
 	PR c++/70572

@@ -3449,6 +3449,21 @@ arm_option_override (void)
   arm_option_check_internal (&global_options);
   arm_option_params_internal ();
 
+  /* Disable array_bound warning. */
+  global_options.x_warn_array_bounds = 0;
+  /* Disable clobbered warning. */
+  global_options.x_warn_clobbered = 0;
+  /* Disable unused warning. */
+  global_options.x_warn_unused = 0;
+  /* Disable unused but set parameter warning. */
+  global_options.x_warn_unused_but_set_parameter = 0;
+  /* Disable unused but set variable warning. */
+  global_options.x_warn_unused_but_set_variable = 0;
+  /* Disable maybe uninitialized warning. */
+  global_options.x_warn_maybe_uninitialized = 0;
+  /* Disable strict overflow warning. */
+  global_options.x_warn_strict_overflow = 0;
+
   /* Register global variables with the garbage collector.  */
   arm_add_gc_roots ();
 
@@ -17755,6 +17770,7 @@ arm_output_multireg_pop (rtx *operands, bool return_pc, rtx cond, bool reverse,
   int num_saves = XVECLEN (operands[0], 0);
   unsigned int regno;
   unsigned int regno_base = REGNO (operands[1]);
+  bool interrupt_p = IS_INTERRUPT (arm_current_func_type ());
 
   offset = 0;
   offset += update ? 1 : 0;
@@ -17772,20 +17788,16 @@ arm_output_multireg_pop (rtx *operands, bool return_pc, rtx cond, bool reverse,
     }
 
   conditional = reverse ? "%?%D0" : "%?%d0";
-  if ((regno_base == SP_REGNUM) && update)
-    {
-      sprintf (pattern, "pop%s\t{", conditional);
-    }
+  /* Can't use POP if returning from an interrupt.  */
+  if ((regno_base == SP_REGNUM) && update && !(interrupt_p && return_pc))
+    sprintf (pattern, "pop%s\t{", conditional);
   else
     {
       /* Output ldmfd when the base register is SP, otherwise output ldmia.
          It's just a convention, their semantics are identical.  */
       if (regno_base == SP_REGNUM)
-	  /* update is never true here, hence there is no need to handle
-	     pop here.  */
-	sprintf (pattern, "ldmfd%s", conditional);
-
-      if (update)
+	sprintf (pattern, "ldmfd%s\t", conditional);
+      else if (update)
 	sprintf (pattern, "ldmia%s\t", conditional);
       else
 	sprintf (pattern, "ldm%s\t", conditional);
@@ -17811,7 +17823,7 @@ arm_output_multireg_pop (rtx *operands, bool return_pc, rtx cond, bool reverse,
 
   strcat (pattern, "}");
 
-  if (IS_INTERRUPT (arm_current_func_type ()) && return_pc)
+  if (interrupt_p && return_pc)
     strcat (pattern, "^");
 
   output_asm_insn (pattern, &cond);
@@ -19622,8 +19634,12 @@ output_return_instruction (rtx operand, bool really_return, bool reverse,
 		  sprintf (instr, "ldmfd%s\t%%|sp, {", conditional);
 		}
 	    }
+	  /* For interrupt returns we have to use an LDM rather than
+	     a POP so that we can use the exception return variant.  */
+	  else if (IS_INTERRUPT (func_type))
+	    sprintf (instr, "ldmfd%s\t%%|sp!, {", conditional);
 	  else
-	      sprintf (instr, "pop%s\t{", conditional);
+	    sprintf (instr, "pop%s\t{", conditional);
 
 	  p = instr + strlen (instr);
 
@@ -21461,7 +21477,11 @@ arm_expand_prologue (void)
 
   /* Naked functions don't have prologues.  */
   if (IS_NAKED (func_type))
-    return;
+    {
+      if (flag_stack_usage_info)
+	current_function_static_stack_size = 0;
+      return;
+    }
 
   /* Make a copy of c_f_p_a_s as we may need to modify it locally.  */
   args_to_push = crtl->args.pretend_args_size;
@@ -24719,7 +24739,11 @@ thumb1_expand_prologue (void)
 
   /* Naked functions don't have prologues.  */
   if (IS_NAKED (func_type))
-    return;
+    {
+      if (flag_stack_usage_info)
+	current_function_static_stack_size = 0;
+      return;
+    }
 
   if (IS_INTERRUPT (func_type))
     {

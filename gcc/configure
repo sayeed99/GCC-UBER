@@ -28370,8 +28370,6 @@ $as_echo "#define HAVE_isl 1" >>confdefs.h
 
 fi
 
-# Check whether isl_schedule_constraints_compute_schedule is available;
-# it's new in ISL-0.13.
 # Check whether isl_options_set_schedule_serialize_sccs is available;
 # it's new in ISL-0.15.
 if test "x${ISLLIBS}" != "x" ; then
@@ -28416,7 +28414,7 @@ isl_options_set_schedule_serialize_sccs (NULL, 0);
   return 0;
 }
 _ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
+if ac_fn_cxx_try_link "$LINENO"; then :
   ac_has_isl_options_set_schedule_serialize_sccs=yes
 else
   ac_has_isl_options_set_schedule_serialize_sccs=no

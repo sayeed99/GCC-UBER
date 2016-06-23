@@ -5778,8 +5778,6 @@ if test "x${ISLLIBS}" != "x" ; then
    AC_DEFINE(HAVE_isl, 1, [Define if isl is in use.])
 fi
 
-# Check whether isl_schedule_constraints_compute_schedule is available;
-# it's new in ISL-0.13.
 # Check whether isl_options_set_schedule_serialize_sccs is available;
 # it's new in ISL-0.15.
 if test "x${ISLLIBS}" != "x" ; then

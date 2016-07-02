@@ -1,3 +1,225 @@
+2016-07-01  Kelvin Nilsen  <kelvin@gcc.gnu.org>
+
+	Backport from trunk r237659
+	2016-06-21  Kelvin Nilsen  <kelvin@gcc.gnu.org>
+
+	* config/rs6000/rs6000.h: Add conditional preprocessing directives
+	to disable Power9-specific compiler features if HAVE_AS_POWER9 is
+	not defined.
+
+2016-07-01  Peter Bergner  <bergner@vnet.ibm.com>
+
+	Backport from trunk
+	2016-06-27  Peter Bergner  <bergner@vnet.ibm.com>
+
+	PR target/71656
+	* config/rs6000/rs6000-cpus.def (ISA_3_0_MASKS_SERVER): Add
+	OPTION_MASK_P9_DFORM_VECTOR.
+	* config/rs6000/rs6000.c (rs6000_option_override_internal): Do not
+	disable -mpower9-dform-vector when using reload.
+	(quad_address_p): Remove 'gpr_p' argument and all associated code.
+	New 'strict' argument.  Update all callers.  Add strict addressing
+	support.
+	(rs6000_legitimate_offset_address_p): Remove call to
+	virtual_stack_registers_memory_p.
+	(rs6000_legitimize_reload_address): Add quad address support.
+	(rs6000_legitimate_address_p): Move call to quad_address_p above
+	call to virtual_stack_registers_memory_p.  Adjust quad_address_p args
+	to account for new strict usage.
+	(rs6000_output_move_128bit): Adjust quad_address_p args to account
+	for new strict usage.
+	* config/rs6000/predicates.md (quad_memory_operand): Likewise.
+
+2016-07-01  Bill Schmidt  <wschmidt@linux.vnet.ibm.com>
+
+	Backport from mainline
+	2016-06-24  Bill Schmidt  <wschmidt@linux.vnet.ibm.com>
+
+	* config/rs6000/rs6000-builtin.def (BU_FLOAT128_2): New #define.
+	(BU_FLOAT128_1): Likewise.
+	(FABSQ): Likewise.
+	(COPYSIGNQ): Likewise.
+	(RS6000_BUILTIN_NANQ): Likewise.
+	(RS6000_BUILTIN_NANSQ): Likewise.
+	(RS6000_BUILTIN_INFQ): Likewise.
+	(RS6000_BUILTIN_HUGE_VALQ): Likewise.
+	* config/rs6000/rs6000.c (rs6000_fold_builtin): New prototype.
+	(TARGET_FOLD_BUILTIN): New #define.
+	(rs6000_builtin_mask_calculate): Add TARGET_FLOAT128 entry.
+	(rs6000_invalid_builtin): Add handling for RS6000_BTM_FLOAT128.
+	(rs6000_fold_builtin): New target hook implementation, handling
+	folding of 128-bit NaNs and infinities.
+	(rs6000_init_builtins): Initialize const_str_type_node; ensure all
+	entries are filled in to avoid problems during bootstrap
+	self-test; define builtins for 128-bit NaNs and infinities.
+	(rs6000_opt_mask): Add entry for float128.
+	* config/rs6000/rs6000.h (RS6000_BTM_FLOAT128): New #define.
+	(RS6000_BTM_COMMON): Include RS6000_BTM_FLOAT128.
+	(rs6000_builtin_type_index): Add RS6000_BTI_const_str.
+	(const_str_type_node): New #define.
+	* config/rs6000/rs6000.md (copysign<mode>3 for IEEE128): Convert
+	to a define_expand that dispatches to either copysign<mode>3_soft
+	or copysign<mode>3_hard.
+	(copysign<mode>3_hard): Rename from copysign<mode>3.
+	(copysign<mode>3_soft): New define_insn.
+	* doc/extend.texi: Document new builtins.
+
+2016-07-01  Peter Bergner  <bergner@vnet.ibm.com>
+
+	Backport from trunk
+	2016-07-01  Peter Bergner  <bergner@vnet.ibm.com>
+
+	PR target/71698
+	* config/rs6000/rs6000.c (rs6000_secondary_reload_simple_move): Disallow
+	TDmode values.
+
+2016-07-01  Kelvin Nilsen  <kelvin@gcc.gnu.org>
+
+	Backport from trunk r236992
+	2016-06-01  Kelvin Nilsen  <kelvin@gcc.gnu.org>
+
+	* config/rs6000/altivec.h (vec_slv): New macro.
+	(vec_srv): New macro.
+	* config/rs6000/altivec.md (UNSPEC_VSLV): New value.
+	(UNSPEC_VSRV): New value.
+	(vslv): New insn.
+	(vsrv): New insn.
+	* config/rs6000/rs6000-builtin.def (vslv): New builtin definition.
+	(vsrv): New builtin definition.
+	* config/rs6000/rs6000-c.c (P9V_BUILTIN_VSLV): Macro expansion to
+	define argument types for new builtin.
+	(P9V_BUILTIN_VSRV): Macro expansion to define argument types for
+	new builtin.
+	* doc/extend.texi: Document the new vec_vslv and vec_srv built-in
+	functions.
+
+2016-07-01  Eric Botcazou  <ebotcazou@adacore.com>
+
+	* config/arm/arm.c (arm_function_ok_for_sibcall): Add another check
+	for NULL decl.
+
+2016-06-30  Kelvin Nilsen  <kelvin@gcc.gnu.org>
+
+	Backport from trunk r237390
+	2016-06-13  Kelvin Nilsen  <kelvin@gcc.gnu.org>
+
+	* config/rs6000/altivec.h (vec_absd): New macro for vector absolute
+	difference unsigned.
+	(vec_absdb): New macro for vector absolute difference unsigned
+	byte.
+	(vec_absdh): New macro for vector absolute difference unsigned
+	half-word.
+	(vec_absdw): New macro for vector absolute difference unsigned word.
+	* config/rs6000/altivec.md (UNSPEC_VADU): New value.
+	(vadu<mode>3): New insn.
+	(*p9_vadu<mode>3): New insn.
+	* config/rs6000/rs6000-builtin.def (vadub): New built-in
+	definition.
+	(vaduh): New built-in definition.
+	(vaduw): New built-in definition.
+	(vadu): New overloaded built-in definition.
+	(vadub): New overloaded built-in definition.
+	(vaduh): New overloaded built-in definition.
+	(vaduw): New overloaded built-in definition.
+	* config/rs6000/rs6000-c.c (altivec_overloaded_builtins): Add
+	overloaded vector absolute difference unsigned functions.
+	* doc/extend.texi (PowerPC AltiVec Built-in Functions): Document
+	the ISA 3.0 vector absolute difference unsigned built-in functions.
+
+2016-06-30  David Malcolm  <dmalcolm@redhat.com>
+
+	Backport from trunk r237880.
+	2016-06-30  David Malcolm  <dmalcolm@redhat.com>
+
+	PR driver/71651
+	* gcc.c (driver::build_option_suggestions): Pass "option" to
+	add_misspelling_candidates.
+	* opts-common.c (add_misspelling_candidates): Add "option" param;
+	use it to avoid adding negated forms for options marked with
+	RejectNegative.
+	* opts.h (add_misspelling_candidates): Add "option" param.
+
+2016-06-30  Jakub Jelinek  <jakub@redhat.com>
+
+	PR middle-end/71693
+	* fold-const.c (fold_binary_loc) <case RROTATE_EXPR>: Cast
+	TREE_OPERAND (arg0, 0) and TREE_OPERAND (arg0, 1) to type
+	first when permuting bitwise operation with rotate.  Cast
+	TREE_OPERAND (arg0, 0) to type when cancelling two rotations.
+
+2016-06-30  Martin Liska  <mliska@suse.cz>
+
+	Parting backport from mainline
+	2016-06-29  Martin Liska  <mliska@suse.cz>
+
+	* ipa-inline-transform.c (inline_call): Remove unnecessary call
+	of build_optimization_node.
+
+2016-06-29  Eric Botcazou  <ebotcazou@adacore.com>
+
+	Backport from mainline
+	2016-06-09  Eric Botcazou  <ebotcazou@adacore.com>
+
+	* df-problems.c (df_note_bb_compute): Guard use of DF_INSN_INFO_GET.
+
+2016-06-27  Michael Meissner  <meissner@linux.vnet.ibm.com>
+
+	Back port from trunk
+	2016-06-21  Michael Meissner  <meissner@linux.vnet.ibm.com>
+
+	* stor-layout.c (layout_type): Move setting complex MODE to
+	layout_type, instead of setting it ahead of time by the caller.
+
+	Back port from trunk
+	2016-05-11  Alan Modra  <amodra@gmail.com>
+
+	* config/rs6000/rs6000.c (is_complex_IBM_long_double,
+	abi_v4_pass_in_fpr): New functions.
+	(rs6000_function_arg_boundary): Exclude complex IBM long double
+	from 64-bit alignment when ABI_V4.
+	(rs6000_function_arg, rs6000_function_arg_advance_1,
+	rs6000_gimplify_va_arg): Use abi_v4_pass_in_fpr.
+
+	Back port from trunk
+	2016-05-02  Michael Meissner  <meissner@linux.vnet.ibm.com>
+
+	* machmode.h (mode_complex): Add support to give the complex mode
+	for a given mode.
+	(GET_MODE_COMPLEX_MODE): Likewise.
+	* stor-layout.c (layout_type): For COMPLEX_TYPE, use the mode
+	stored by build_complex_type and gfc_build_complex_type instead of
+	trying to figure out the appropriate mode based on the size. Raise
+	an assertion error, if the type was not set.
+	* genmodes.c (struct mode_data): Add field for the complex type of
+	the given type.
+	(blank_mode): Likewise.
+	(make_complex_modes): Remember the complex mode created in the
+	base type.
+	(emit_mode_complex): Write out the mode_complex array to map a
+	type mode to the complex version.
+	(emit_insn_modes_c): Likewise.
+	* tree.c (build_complex_type): Set the complex type to use before
+	calling layout_type.
+	* config/rs6000/rs6000.c (rs6000_hard_regno_nregs_internal): Add
+	support for __float128 complex datatypes.
+	(rs6000_hard_regno_mode_ok): Likewise.
+	(rs6000_setup_reg_addr_masks): Likewise.
+	(rs6000_complex_function_value): Likewise.
+	* config/rs6000/rs6000.h (FLOAT128_IEEE_P): Likewise.
+	__float128 and __ibm128 complex.
+	(FLOAT128_IBM_P): Likewise.
+	(ALTIVEC_ARG_MAX_RETURN): Likewise.
+	* doc/extend.texi (Additional Floating Types): Document that
+	-mfloat128 must be used to enable __float128.  Document complex
+	__float128 and __ibm128 support.
+
+2016-06-24  Jakub Jelinek  <jakub@redhat.com>
+
+	PR tree-optimization/71647
+	* omp-low.c (lower_rec_input_clauses): Convert
+	omp_clause_aligned_alignment (c) to size_type_node for the
+	last argument of __builtin_assume_aligned.
+
 2016-06-22  Eric Botcazou  <ebotcazou@adacore.com>
 
 	* function.c (assign_parm_setup_reg): Prevent sharing in another case.

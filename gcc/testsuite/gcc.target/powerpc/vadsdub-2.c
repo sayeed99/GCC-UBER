@@ -7,9 +7,18 @@
 /* This test should succeed on both 32- and 64-bit configurations.  */
 #include <altivec.h>
 
-int get_random ()
+__vector unsigned char
+doAbsoluteDifferenceUnsigned (__vector unsigned char *p,
+			      __vector unsigned char *q)
 {
-  return __builtin_darn_32 ();
+  __vector unsigned char source_1, source_2;
+  __vector unsigned char uc_result;
+
+  source_1 = *p;
+  source_2 = *q;
+
+  uc_result = vec_absdb (source_1, source_2);
+  return uc_result;
 }
 
-/* { dg-final { scan-assembler	   "darn" } } */
+/* { dg-final { scan-assembler "vabsdub" } } */

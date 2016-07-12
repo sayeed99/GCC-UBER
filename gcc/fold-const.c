@@ -2194,7 +2194,6 @@ fold_convertible_p (const_tree type, const_tree arg)
 
     case REAL_TYPE:
     case FIXED_POINT_TYPE:
-    case COMPLEX_TYPE:
     case VECTOR_TYPE:
     case VOID_TYPE:
       return TREE_CODE (type) == TREE_CODE (orig);
@@ -7943,6 +7942,8 @@ fold_unary_loc (location_t loc, enum tree_code code, tree type, tree op0)
     case VIEW_CONVERT_EXPR:
       if (TREE_CODE (op0) == MEM_REF)
         {
+	  if (TYPE_ALIGN (TREE_TYPE (op0)) != TYPE_ALIGN (type))
+	    type = build_aligned_type (type, TYPE_ALIGN (TREE_TYPE (op0)));
 	  tem = fold_build2_loc (loc, MEM_REF, type,
 				 TREE_OPERAND (op0, 0), TREE_OPERAND (op0, 1));
 	  REF_REVERSE_STORAGE_ORDER (tem) = REF_REVERSE_STORAGE_ORDER (op0);

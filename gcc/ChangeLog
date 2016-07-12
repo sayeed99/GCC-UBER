@@ -1,3 +1,210 @@
+2016-07-11  Jakub Jelinek  <jakub@redhat.com>
+
+	PR middle-end/71758
+	* omp-low.c (expand_omp_target): Gimplify device.
+
+	PR tree-optimization/71823
+	* tree-vect-stmts.c (vectorizable_operation): Use vect_get_vec_defs
+	to get vec_oprnds2 from op2.
+
+2016-07-11  Yuri Rumyantsev  <ysrumyan@gmail.com>
+
+	Backport from mainline r238055.
+	2016-07-06  Yuri Rumyantsev  <ysrumyan@gmail.com>
+
+	PR tree-optimization/71518
+	* tree-vect-data-refs.c (vect_compute_data_ref_alignment): Adjust
+	misalign also for outer loops with negative step.
+
+2016-07-08  Martin Liska  <mliska@suse.cz>
+
+	Backported from mainline
+	2016-07-08  Martin Liska  <mliska@suse.cz>
+
+	PR middle-end/71606
+	* fold-const.c (fold_convertible_p): As COMPLEX_TYPE
+	folding produces SAVE_EXPRs, thus return false for the type.
+
+2016-07-08  Kelvin Nilsen  <kelvin@gcc.gnu.org>
+
+	* config/rs6000/rs6000-builtin.def (BU_P9_MISC_1): Remove
+	redundant and erroneous definition of this macro accidentally
+	inserted during backporting.
+	(BU_P9_64BIT_MISC_0): Likewise.
+	(BU_P9_MISC_0): Likewise.
+
+2016-07-08  Jiong Wang  <jiong.wang@arm.com>
+
+	Back port from the trunk
+	2016-07-08  Jiong Wang  <jiong.wang@arm.com>
+
+	* config/aarch64/aarch64-simd-builtins.def (smax): Remove float
+	variants.
+	(smin): Likewise.
+	(fmax): New entry.
+	(fmin): Likewise.
+	* config/aarch64/arm_neon.h (vmaxnm_f32): Use
+	__builtin_aarch64_fmaxv2sf.
+	(vmaxnmq_f32): Likewise.
+	(vmaxnmq_f64): Likewise.
+	(vminnm_f32): Likewise.
+	(vminnmq_f32): Likewise.
+	(vminnmq_f64): Likewise.
+
+2016-07-08  Michael Meissner  <meissner@linux.vnet.ibm.com>
+
+	Back port from trunk
+	2016-07-08  Michael Meissner  <meissner@linux.vnet.ibm.com>
+
+	PR target/71806
+	* config/rs6000/rs6000-cpus.def (ISA_3_0_MASKS_SERVER): Do not
+	enable -mfloat128-hardware by default.
+	(ISA_3_0_MASKS_IEEE): New macro to give all of the VSX options
+	that IEEE 128-bit hardware support needs.
+	* config/rs6000/rs6000.c (rs6000_option_override_internal): If
+	-mcpu=power9 -mfloat128, enable -mfloat128-hardware by default.
+	Use ISA_3_0_MASKS_IEEE as the set of options that IEEE 128-bit
+	floating point requires.
+	* doc/invoke.texi (RS/6000 and PowerPC Options): Document
+	-mfloat128 and -mfloat128-hardware changes.
+
+2016-07-08  Kelvin Nilsen  <kelvin@gcc.gnu.org>
+
+	Backport from mainline r237912
+	2016-07-01  Kelvin Nilsen  <kelvin@gcc.gnu.org>
+
+	* config/rs6000/altivec.md (*altivec_vpermr_<mode>_internal):
+	Exchange the order of the second and third operands in the vpermr
+	instruction tmeplate.
+
+2016-07-07  Michael Meissner  <meissner@linux.vnet.ibm.com>
+
+	Back port from the trunk
+	2016-07-01  Michael Meissner  <meissner@linux.vnet.ibm.com>
+
+	PR target/71720
+	* config/rs6000/vsx.md (vsx_splat_v4sf_internal): When splitting
+	the insns, use an insn form that does not adjust the offset on
+	little endian systems.
+
+2016-07-07  Kelvin Nilsen  <kelvin@gcc.gnu.org>
+
+	Backport from mainline r237885
+	2016-06-30  Kelvin Nilsen  <kelvin@gcc.gnu.org>
+
+	* config/rs6000/altivec.md (darn_32): Change the condition to
+	TARGET_P9_MISC instead of TARGET_MODULO.
+	(darn_raw): Replace TARGET_MODULO with TARGET_P9_MISC in the
+	condition expression.
+	(darn): Replace TARGET_MODULO with TARGET_P9_MISC in the
+	condition expression.
+	* config/rs6000/dfp.md (UNSPEC_DTSTSFI): New unspec constant.
+	(DFP_TEST): New code iterator.
+	(dfptstsfi_<code>_mode>): New define_expand.
+	(*dfp_sgnfcnc_<mode>): New define_insn.
+	* config/rs6000/rs6000-builtin.def (BU_P9_MISC_0): Move this macro
+	definition next to BU_P9_MISC_1 definition and change the MASK
+	value to RS6000_BTM_P9_MISC.
+	(BU_P9_MISC_1): Change the MASK value to RS6000_BTM_P9_MISC.
+	(BU_P9_64BIT_MISC_0): Likewise.
+	(BU_P9_DFP_MISC_0): New macro definition.
+	(BU_P9_DFP_MISC_1): New macro definition.
+	(BU_P9_DFP_MISC_2): New macro definition.
+	(BU_P9_DFP_OVERLOAD_1): New macro definition.
+	(BU_P9_DFP_OVERLOAD_2): New macro definition.
+	(BU_P9_DFP_OVERLOAD_3): New macro definition.
+	(TSTSFI_LT_DD): New BU_P9_DFP_MISC_2.
+	(TSTSFI_LT_TD): Likewise.
+	(TSTSFI_EQ_DD): Likewise.
+	(TSTSFI_EQ_TD): Likewise.
+	(TSTSFI_GT_DD): Likewise.
+	(TSTSFI_GT_TD): Likewise.
+	(TSTSFI_OV_DD): Likewise.
+	(TSTSFI_OV_TD): Likewise.
+	(TSTSFI_LT): New BU_P9_DFP_OVERLOAD_2.
+	(TSTSFI_LT_DD): Likewise.
+	(TSTSFI_LT_TD): Likewise.
+	(TSTSFI_EQ): Likewise.
+	(TSTSFI_EQ_DD): Likewise.
+	(TSTSFI_EQ_TD): Likewise.
+	(TSTSFI_GT): Likewise.
+	(TSTSFI_GT_DD): Likewise.
+	(TSTSFI_GT_TD): Likewise.
+	(TSTSFI_OV): Likewise.
+	(TSTSFI_OV_DD): Likewise.
+	(TSTSFI_OV_TD): Likewise.
+	* config/rs6000/rs6000-c.c (altivec_overloaded_builtins): Add
+	overloaded test significance functions.
+	* config/rs6000/rs6000-cpus.def (ISA_3_0_MASKS_SERVER): Add
+	OPTION_MASK_P9_MISC into the representation of this mask.
+	(POWERPC_MASKS): Add OPTION_MASK_P9_MISC into the representation
+	of this mask.
+	* config/rs6000/rs6000.c (rs6000_builtin_mask_calculate): Set the
+	RS6000_BTM_P9_MISC flag in the return value if TARGET_P9_MISC is
+	non-zero.
+	(rs6000_expand_binop_builtin): Enforce that argument 0 of the exp
+	argument is a 6-bit unsigned literal value if the icode argument
+	represents a DFP test significance built-in call.
+	(rs6000_invalid_builtin): Add support for the RS6000_BTM_P9_MISC
+	flag used independently and in combination with the
+	RS6000_BTM_64BIT flag.
+	(rs6000_opt_masks): Add entry for power9-misc command-line option.
+	(rs6000_builtin_mask_names): Add entry for power9-misc
+	command-line option.
+	* config/rs6000/rs6000.h: Redefine TARGET_P9_MISC as 0 if
+	HAVE_AS_POWER9 is not a defined macro.  Define MASK_P9_MISC and
+	RS6000_BTM_P9_MISC macros.
+	* config/rs6000/rs6000.opt: Add support for the -mpower9-misc
+	option and change the description of the -mpower9-vector option to
+	enable only vector instructions, removing its erroneously claimed
+	support for scalar instructions.
+	* doc/extend.texi (PowerPC AltiVec Built-in Functions): Document
+	the ISA 3.0 digital floating point test significance built-in
+	functions.
+
+2016-07-07  Richard Biener  <rguenther@suse.de>
+
+	Backport from mainline
+	2016-06-13  Richard Biener  <rguenther@suse.de>
+
+	PR middle-end/64516
+	* fold-const.c (fold_unary_loc): Preserve alignment when
+	folding a VIEW_CONVERT_EXPR into a MEM_REF.
+
+2016-07-07  Richard Biener  <rguenther@suse.de>
+
+	Backport from mainline
+	2016-05-25  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/71264
+	* tree-vect-stmts.c (vect_init_vector): Properly deal with
+	vector type val.
+
+	2016-06-07  Richard Biener  <rguenther@suse.de>
+
+	PR middle-end/71423
+	* match.pd ((X | ~Y) -> Y <= X): Properly invert the comparison
+	for signed ops.
+
+	2016-06-14  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/71521
+	* tree-vrp.c (extract_range_from_binary_expr_1): Guard
+	division int_const_binop against zero divisor.
+
+	2016-06-08  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/71452
+	* tree-ssa.c (non_rewritable_lvalue_p): Make sure that the
+	type used for the SSA rewrite has enough precision to cover
+	the dynamic type of the location.
+
+	2016-06-14  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/71522
+	* tree-ssa.c (non_rewritable_lvalue_p): Do not rewrite non-float
+	copying into float copying.
+
 2016-07-06  Senthil Kumar Selvaraj  <senthil_kumar.selvaraj@atmel.com>
 
 	Backport from mainline

@@ -1,3 +1,72 @@
+2016-07-15  Alan Modra  <amodra@gmail.com>
+
+	Apply from mainline
+	2016-07-11  Alan Modra  <amodra@gmail.com>
+	* config/rs6000/rs6000.md (UNSPEC_DOLOOP): New unspec.
+	(ctr<mode>): Add unspec.
+	(ctr<mode>_internal*): Likewise.
+
+2016-07-14  Alan Modra  <amodra@gmail.com>
+
+	PR target/71733
+	* config/rs6000/rs6000.c (rs6000_option_override_internal): Deal
+	with p9_vector override before power9-dform override.
+
+2016-07-13  Ilya Enkovich  <ilya.enkovich@intel.com>
+
+	Backport from mainline r238086.
+	2016-07-07  Ilya Enkovich  <ilya.enkovich@intel.com>
+
+	PR ipa/71624
+	* ipa-inline-analysis.c (compute_inline_parameters): Set
+	local.can_change_signature to false for intrumentation
+	thunk callees.
+
+2016-07-12  Michael Meissner  <meissner@linux.vnet.ibm.com>
+	    Bill Schmidt  <wschmidt@linux.vnet.ibm.com>
+
+	Backport from mainline
+	2016-07-05  Michael Meissner  <meissner@linux.vnet.ibm.com>
+	            Bill Schmidt  <wschmidt@linux.vnet.ibm.com>
+
+	* config/rs6000/rs6000-protos.h (rs6000_split_signbit): New
+	prototype.
+	* config/rs6000/rs6000.c (rs6000_split_signbit): New function.
+	* config/rs6000/rs6000.md (UNSPEC_SIGNBIT): New constant.
+	(SIGNBIT): New mode iterator.
+	(Fsignbit): New mode attribute.
+	(signbit<mode>2): Change operand1 to match FLOAT128 instead of
+	IBM128; dispatch to gen_signbit{kf,tf}2_dm for __float128
+	when direct moves are available.
+	(signbit<mode>2_dm): New define_insn_and_split).
+	(signbit<mode>2_dm2): New define_insn.
+
+2016-07-12  Michael Meissner  <meissner@linux.vnet.ibm.com>
+
+	Backport from mainline
+	2016-07-12  Michael Meissner  <meissner@linux.vnet.ibm.com>
+
+	PR target/71805
+	* config/rs6000/altivec.md (altivec_vperm_<mode>_internal):
+	The xxperm and xxpermr instructions require that the 2nd input
+	operand overlap with the output operand, and not the 1st.
+	(altivec_vperm_v8hiv16qi): Likewise.
+	(altivec_vperm_<mode>_uns_internal): Likewise.
+	(altivec_vpermr_<mode>_internal): Likewise.
+	(vperm_v8hiv4si): Likewise.
+	(vperm_v16qiv8hi): Likewise.
+
+2016-07-12  Segher Boessenkool  <segher@kernel.crashing.org>
+
+	Backport from mainline
+	2016-07-06  Segher Boessenkool  <segher@kernel.crashing.org>
+
+	PR target/70098
+	PR target/71763
+	* config/rs6000/rs6000.md (*ctr<mode>_internal1, *ctr<mode>_internal2,
+	*ctr<mode>_internal5, *ctr<mode>_internal6): Add *wi to the output
+	constraint.
+
 2016-07-11  Jakub Jelinek  <jakub@redhat.com>
 
 	PR middle-end/71758

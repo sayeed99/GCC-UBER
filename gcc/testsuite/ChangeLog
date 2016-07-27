@@ -1,3 +1,23 @@
+2016-07-26  Bill Schmidt  <wschmidt@linux.vnet.ibm.com>
+
+	Backport from mainline
+	2016-07-26  Bill Schmidt  <wschmidt@linux.vnet.ibm.com>
+
+	* gcc.target/powerpc/pr63354.c: Require lp64 since
+	-mprofile-kernel is not legal with -m32.
+
+2016-07-22  Andre Vehreschild  <vehre@gcc.gnu.org>
+
+	Backported from trunk:
+	PR fortran/71807
+	* gfortran.dg/null_9.f90: New test.
+
+2016-07-22  Andre Vehreschild  <vehre@gcc.gnu.org>
+
+	Backport from trunk:
+	PR fortran/70842
+	* gfortran.dg/select_type_35.f03: New test.
+
 2016-07-21  Jakub Jelinek  <jakub@redhat.com>
 
 	PR c++/71728
